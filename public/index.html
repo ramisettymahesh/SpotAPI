@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Song Recommender</title>
+  <style>
+    body { font-family: Arial; padding: 20px; }
+    #searchBox { padding: 8px; width: 300px; }
+    #suggestions { border: 1px solid #ccc; max-width: 300px; }
+    .suggestion { padding: 8px; cursor: pointer; }
+    .suggestion:hover { background: #eee; }
+  </style>
+</head>
+<body>
+  <h1>Song Recommender</h1>
+  <input type="text" id="searchBox" placeholder="Search category...">
+  <div id="suggestions"></div>
+  <h2>Recommended Songs:</h2>
+  <ul id="songs"></ul>
+
+  <script>
+    const categories = [
+      "Happy", "Sad", "Romantic", "Party", "Workout", "Relax", "Road trip",
+      "Chill", "Study", "Jazz", "Rock", "Pop", "Classical", "Hip hop", "EDM",
+      "Rainy day", "Sunny day", "Evening", "Morning", "Meditation", "Dance",
+      "Travel", "Nostalgia", "Love", "Heartbreak", "Focus", "Sleep", "Gaming",
+      "Adventure", "Cooking", "Driving", "Festival", "Beach", "Winter",
+      "Summer", "Spring", "Autumn", "Motivation", "Celebration", "Friendship","Mass","Telugu","Tamil"
+    ];
+
+    const searchBox = document.getElementById("searchBox");
+    const suggestionsDiv = document.getElementById("suggestions");
+    const songsList = document.getElementById("songs");
+    searchBox.addEventListener("input", () => {
+      const query = searchBox.value.toLowerCase();
+      suggestionsDiv.innerHTML = "";
+      if (!query) return;
+      const filtered = categories.filter(cat => cat.toLowerCase().includes(query));
+      filtered.forEach(cat => {
+        const div = document.createElement("div");
+        div.textContent = cat;
+        div.classList.add("suggestion");
+        div.onclick = () => {
+          searchBox.value = cat;
+          suggestionsDiv.innerHTML = "";
+          getRecommendations(cat);
+        };
+        suggestionsDiv.appendChild(div);
+      });
+    });
+    searchBox.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        suggestionsDiv.innerHTML = "";
+        getRecommendations(searchBox.value);
+      }
+    });
+
+    async function getRecommendations(query) {
+      const res = await fetch(`/recommend?q=${encodeURIComponent(query)}`);
+      const data = await res.json();
+      songsList.innerHTML = "";
+      data.tracks.forEach(song => {
+        const li = document.createElement("li");
+        li.innerHTML = `<a href="${song.url}" target="_blank">${song.title} - ${song.artist}</a>`;
+        songsList.appendChild(li);
+      });
+    }
+  </script>
+</body>
+</html>
