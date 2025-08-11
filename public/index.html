@@ -1,19 +1,15 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Song Recommender</title>
-  <style>
-    body { font-family: Arial; padding: 20px; }
-    #searchBox { padding: 8px; width: 300px; }
-    #suggestions { border: 1px solid #ccc; max-width: 300px; }
-    .suggestion { padding: 8px; cursor: pointer; }
-    .suggestion:hover { background: #eee; }
-  </style>
+  <meta charset="UTF-8" />
+  <title>🎶 Song Recommender</title>
+  <link href="index.css" rel="stylesheet">
 </head>
 <body>
-  <h1>Song Recommender</h1>
+  <h1>🎶 Song Recommender</h1>
   <input type="text" id="searchBox" placeholder="Search category...">
   <div id="suggestions"></div>
+  <div id="loading" style="display:none;">Loading recommendations...</div>
   <h2>Recommended Songs:</h2>
   <ul id="songs"></ul>
 
@@ -24,12 +20,14 @@
       "Rainy day", "Sunny day", "Evening", "Morning", "Meditation", "Dance",
       "Travel", "Nostalgia", "Love", "Heartbreak", "Focus", "Sleep", "Gaming",
       "Adventure", "Cooking", "Driving", "Festival", "Beach", "Winter",
-      "Summer", "Spring", "Autumn", "Motivation", "Celebration", "Friendship","Mass","Telugu","Tamil"
+      "Summer", "Spring", "Autumn", "Motivation", "Celebration", "Friendship", "Mass", "Telugu", "Tamil"
     ];
 
     const searchBox = document.getElementById("searchBox");
     const suggestionsDiv = document.getElementById("suggestions");
     const songsList = document.getElementById("songs");
+    const loadingDiv = document.getElementById("loading");
+
     searchBox.addEventListener("input", () => {
       const query = searchBox.value.toLowerCase();
       suggestionsDiv.innerHTML = "";
@@ -47,6 +45,7 @@
         suggestionsDiv.appendChild(div);
       });
     });
+
     searchBox.addEventListener("keydown", (e) => {
       if (e.key === "Enter") {
         suggestionsDiv.innerHTML = "";
@@ -55,8 +54,10 @@
     });
 
     async function getRecommendations(query) {
+      loadingDiv.style.display = "block";
       const res = await fetch(`/recommend?q=${encodeURIComponent(query)}`);
       const data = await res.json();
+      loadingDiv.style.display = "none";
       songsList.innerHTML = "";
       data.tracks.forEach(song => {
         const li = document.createElement("li");
