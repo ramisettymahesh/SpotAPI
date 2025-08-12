@@ -8,7 +8,14 @@ import cors from 'cors';
 dotenv.config();
 const app = express();
 const PORT = 3000;
-app.use(cors())
+app.use(cors(
+  {
+    origin:"https://spot-api-bgm9.vercel.app/",
+    methods:["GET","POST","PUT","DELETE"],
+    credentials:true
+  }
+));
+
 
 const spotifyApi = new SpotifyWebApi({
   clientId: process.env.SPOTIFY_CLIENT_ID || "",
@@ -44,4 +51,5 @@ app.get("/recommend", async (req, res) => {
 app.listen(PORT, () =>
   console.log(`Server running at http://localhost:${PORT}`)
 );
+
 
