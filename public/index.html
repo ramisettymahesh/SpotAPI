@@ -55,7 +55,7 @@
 
     async function getRecommendations(query) {
       loadingDiv.style.display = "block";
-      const res = await fetch(`https://spot-api-sable.vercel.app/recommend?q=${encodeURIComponent(query)}`);
+      const res = await fetch(`https://spot-api-bgm9.vercel.app/recommend?q=${encodeURIComponent(query)}`);
       const data = await res.json();
       loadingDiv.style.display = "none";
       songsList.innerHTML = "";
