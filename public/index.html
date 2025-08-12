@@ -55,7 +55,7 @@
 
     async function getRecommendations(query) {
       loadingDiv.style.display = "block";
-      const res = await fetch(`/recommend?q=${encodeURIComponent(query)}`);
+      const res = await fetch(`http://localhost:3000/recommend?q=${encodeURIComponent(query)}`);
       const data = await res.json();
       loadingDiv.style.display = "none";
       songsList.innerHTML = "";
